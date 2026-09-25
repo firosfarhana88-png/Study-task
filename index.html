@@ -1,10 +1,312 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Study Task</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Study Tasks</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        header {
+            background: #4f46e5;
+            color: white;
+            padding: 35px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0 0 10px;
+            font-size: 36px;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 17px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .progress-box {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 15px;
+            background: #e5e7eb;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        #progress {
+            height: 100%;
+            width: 0%;
+            background: #22c55e;
+            transition: 0.3s;
+        }
+
+        .subject {
+            background: white;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .subject h2 {
+            margin-top: 0;
+            color: #4f46e5;
+        }
+
+        .task {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .task:last-child {
+            border-bottom: none;
+        }
+
+        .task input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .task.completed span {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .add-task {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .add-task input,
+        .add-task select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #4f46e5;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #3730a3;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Welcome to My Study Task</h1>
-    <p>My project is working!</p>
+
+<header>
+    <h1>📚 My Study Tasks</h1>
+    <p>Organize your studies and complete your goals!</p>
+</header>
+
+<div class="container">
+
+    <div class="progress-box">
+        <strong>📊 Study Progress</strong>
+        <p id="progressText">0 of 6 tasks completed</p>
+
+        <div class="progress-bar">
+            <div id="progress"></div>
+        </div>
+    </div>
+
+    <div class="subject">
+        <h2>📐 Mathematics</h2>
+
+        <div class="task">
+            <input type="checkbox" onchange="updateProgress()">
+            <span>Complete algebra exercises</span>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" onchange="updateProgress()">
+            <span>Study geometry formulas</span>
+        </div>
+    </div>
+
+    <div class="subject">
+        <h2>🔬 Science</h2>
+
+        <div class="task">
+            <input type="checkbox" onchange="updateProgress()">
+            <span>Read Chapter 3</span>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" onchange="updateProgress()">
+            <span>Make science notes</span>
+        </div>
+    </div>
+
+    <div class="subject">
+        <h2>📖 English</h2>
+
+        <div class="task">
+            <input type="checkbox" onchange="updateProgress()">
+            <span>Read 10 pages</span>
+        </div>
+
+        <div class="task">
+            <input type="checkbox" onchange="updateProgress()">
+            <span>Practice vocabulary</span>
+        </div>
+    </div>
+
+    <div class="add-task">
+        <h2>➕ Add a New Task</h2>
+
+        <input
+            type="text"
+            id="newTask"
+            placeholder="Enter your task..."
+        >
+
+        <select id="subjectSelect">
+            <option value="Mathematics">Mathematics</option>
+            <option value="Science">Science</option>
+            <option value="English">English</option>
+        </select>
+
+        <button onclick="addTask()">Add Task</button>
+    </div>
+
+</div>
+
+<footer>
+    <p>Keep studying. Keep improving. 🌟</p>
+</footer>
+
+<script>
+
+    function updateProgress() {
+
+        const checkboxes = document.querySelectorAll(
+            '.task input[type="checkbox"]'
+        );
+
+        const completed = document.querySelectorAll(
+            '.task input[type="checkbox"]:checked'
+        );
+
+        const total = checkboxes.length;
+        const done = completed.length;
+
+        const percentage = total === 0
+            ? 0
+            : (done / total) * 100;
+
+        document.getElementById("progress").style.width =
+            percentage + "%";
+
+        document.getElementById("progressText").textContent =
+            done + " of " + total + " tasks completed";
+
+        document.querySelectorAll(".task").forEach(task => {
+
+            const checkbox = task.querySelector("input");
+
+            if (checkbox.checked) {
+                task.classList.add("completed");
+            } else {
+                task.classList.remove("completed");
+            }
+
+        });
+    }
+
+    function addTask() {
+
+        const taskText =
+            document.getElementById("newTask").value;
+
+        const subject =
+            document.getElementById("subjectSelect").value;
+
+        if (taskText.trim() === "") {
+            alert("Please enter a task!");
+            return;
+        }
+
+        const subjects =
+            document.querySelectorAll(".subject");
+
+        let selectedSubject = null;
+
+        subjects.forEach(section => {
+
+            const heading =
+                section.querySelector("h2");
+
+            if (heading.textContent.includes(subject)) {
+                selectedSubject = section;
+            }
+
+        });
+
+        const task = document.createElement("div");
+
+        task.className = "task";
+
+        task.innerHTML = `
+            <input type="checkbox" onchange="updateProgress()">
+            <span>${taskText}</span>
+        `;
+
+        selectedSubject.appendChild(task);
+
+        document.getElementById("newTask").value = "";
+
+        updateProgress();
+    }
+
+</script>
+
 </body>
 </html>
